@@ -10,6 +10,10 @@ matrix = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
 # define a matrix using fractions
 fracmatrix = [[F(3,2),F(0,1),F(0,1),F(0,1)],[F(0,1),F(1,1),F(0,1),F(0,1)],[F(0,1),F(0,1),F(1,1),F(0,1)],[F(0,1),F(0,1),F(0,1),F(1,1)]]
 
+def scaleRow(matrix, row, multiplier):
+    matrix[row] = map(lambda  x: x * multiplier, matrix[row])
+    return matrix
+
 def addRow(matrix, row1, row2, multiplier):
     for i in range(len(matrix[row1])-1):
         matrix[row2-1][i] = matrix[row2-1][i] + multiplier * matrix[row1-1][i]
@@ -93,6 +97,8 @@ def printRowOp(matrix, row1, row2, multiplier, op):
         subtractRow(matrix, row1, row2, multiplier)
     elif (op == "swap"):
         swapRows(matrix, row1, row2)
+    elif (op == "scale"):
+        scaleRow(matrix, row1, multiplier)
     s += "\n&\n%s" % fracToLatexMatrix(matrix)
     s += "\\end{array}"
     print s
@@ -108,5 +114,4 @@ if __name__ == "__main__":
     printRowOp(fracmatrix, 1, 3, 0, "swap")
     printRowOp(fracmatrix, 1, 3, -7, "-")
     printRowOp(fracmatrix, 1, 3, -2, "+")
-    printRowOp(fracmatrix, 3, 1, -7, "+")
-
+    printRowOp(fracmatrix, 1, 1, 10, "scale")
