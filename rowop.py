@@ -20,14 +20,15 @@ def scaleRow(matrix, row, multiplier):
     return matrix
 
 def addRow(matrix, row1, row2, multiplier):
-    for i in range(len(matrix[row1])):
+    for i in range(len(matrix[row1-1])):
         matrix[row2-1][i] = matrix[row2-1][i] + multiplier * matrix[row1-1][i]
     return matrix
 
 def subtractRow(matrix, row1, row2, multiplier):
-    for i in range(len(matrix[row1])):
+    for i in range(len(matrix[row1-1])):
         matrix[row2-1][i] = matrix[row2-1][i] - multiplier * matrix[row1-1][i]
     return matrix
+
 
 
 def swapRows(matrix, row1, row2):
@@ -102,7 +103,7 @@ def printRowOp(matrix, row1, row2, multiplier, op):
         scaleRow(matrix, row1, multiplier)
     s += "\n&\n%s" % fracToLatexMatrix(matrix)
     s += "\\end{array}"
-    return s
+    return (matrix, s)
 
 def fracToLatex(frac):
     split = str(frac).split("/")
