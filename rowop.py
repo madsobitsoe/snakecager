@@ -1,112 +1,112 @@
 from fractions import Fraction as F
 
-def stringToFracMatrix(stringMatrix):
-    def stringToFrac(n):
-        s = n.split("/")
-        if (len(s) == 2):
-            return F(int(s[0]), int(s[1]))
-        return F(n)
-    fracmatrix = [[stringToFrac(ix) for ix in x] for x in stringMatrix]
+def frac_matrix_of_string(string_matrix):
+    def string_to_frac(fraction_string):
+        fraction = fraction_string.split("/")
+        if len(fraction) == 2:
+            return F(int(fraction[0]), int(fraction[1]))
+        return F(fraction_string)
+    fracmatrix = [[string_to_frac(ix) for ix in x] for x in string_matrix]
     return fracmatrix
 
-def intOrDoubleMatrixToFracMatrix(intmatrix):
-    def intToFrac(n):
-        return F(n)
-    fracmatrix = [[intToFrac(ix) for ix in x] for x in intmatrix]
-    return fracmatrix
+def intmatrix_to_frac_matrix(intmatrix):
+    return [[F(ix) for ix in x] for x in intmatrix]
 
-def scaleRow(matrix, row, multiplier):
+
+def scale_row(matrix, row, multiplier):
     matrix[row-1] = map(lambda  x: x * multiplier, matrix[row-1])
     return matrix
 
-def addRow(matrix, row1, row2, multiplier):
+def add_row(matrix, row1, row2, multiplier):
     for i in range(len(matrix[row1-1])):
         matrix[row2-1][i] = matrix[row2-1][i] + multiplier * matrix[row1-1][i]
     return matrix
 
-def subtractRow(matrix, row1, row2, multiplier):
+def subtract_row(matrix, row1, row2, multiplier):
     for i in range(len(matrix[row1-1])):
         matrix[row2-1][i] = matrix[row2-1][i] - multiplier * matrix[row1-1][i]
     return matrix
 
-
-
-def swapRows(matrix, row1, row2):
+def swap_rows(matrix, row1, row2):
     tmp = matrix[row1-1]
     matrix[row1-1] = matrix[row2-1]
     matrix[row2-1] = tmp
     return matrix
 
-def printMatrix(matrix):
-    s = ""
+def print_matrix(matrix):
+    matrix_string = ""
     for row in matrix:
         for col in row:
-            s +=  " %d" % col
-        s += "\n"
-    print s
+            matrix_string += " %d" % col
+        matrix_string += "\n"
+    print matrix_string
 
-def toLatexMatrix(matrix):
-    n = len(matrix[0])
-    s = "\\left[\n\\begin{array}{%s}\n" % (n * "r")
+def to_latex_matrix(matrix):
+    """ """
+    matrix_string = "\\left[\n\\begin{array}{%s}\n" % (len(matrix[0]) * "r")
     for row in matrix:
         for col in row:
-            s += " %s &" % col
-        s = s[:-1]
-        s += " \\\\\n"
-    s = s[:-5]
-    s += "\n\\end{array}\n\\right]\n"
-    return s
+            matrix_string += " %s &" % col
+        matrix_string = matrix_string[:-1]
+        matrix_string += " \\\\\n"
+    matrix_string = matrix_string[:-5]
+    matrix_string += "\n\\end{array}\n\\right]\n"
+    return matrix_string
 
-def fracToLatexMatrix(matrix):
-    n = len(matrix[0])
-    s = "\\left[\n\\begin{array}{%s}\n" % (n * "r")
+def frac_matrix_to_latex(matrix):
+    """Converts a nested list of fractions into a latex-formatted string"""
+    matrix_string = "\\left[\n\\begin{array}{%s}\n" % (len(matrix[0]) * "r")
     for row in matrix:
         for col in row:
-            s += " %s &" % fracToLatex(col)
-        s = s[:-1]
-        s += " \\\\\n"
-    s = s[:-5]
-    s += "\n\\end{array}\n\\right]\n"
-    return s
+            matrix_string += " %s &" % frac_to_latex(col)
+        matrix_string = matrix_string[:-1]
+        matrix_string += " \\\\\n"
+    matrix_string = matrix_string[:-5]
+    matrix_string += "\n\\end{array}\n\\right]\n"
+    return matrix_string
 
-def createOpString(stringMultiplier, row1, row2, op):
-    s = ""
-    if (op == "swap"):
-        s = "\\mathbf{r}_%d \\leftrightarrow \\mathbf{r}_%d" % (row1, row2)
-    else:
-        s += "%s\\mathbf{r}_%d %s \\mathbf{r}_%d \\to \\mathbf{r}_%d" % (stringMultiplier, row1, op, row2, row2)
-    return s
+def create_op_string(string_multiplier, row1, row2, operation):
+    if operation == "swap":
+        return "\\mathbf{r}_%d \\leftrightarrow \\mathbf{r}_%d" % (row1, row2)
+    return "%s\\mathbf{r}_%d %s \\mathbf{r}_%d \\to \\mathbf{r}_%d" % (string_multiplier,
+                                                                       row1,
+                                                                       operation,
+                                                                       row2,
+                                                                       row2)
 
-def printRowOp(matrix, row1, row2, multiplier, op):
-    stringMultiplier = ""
-    if (multiplier > 1 or multiplier < 0):
-        stringMultiplier = "%d" % multiplier
-    s = ("\\setstretch{1.5}\n"
-         "\\setlength{\\jot}{8pt}\n")
-    s += "  \\begin{array}{lcl}"
+def print_row_op(matrix, row1, row2, multiplier, operation):
+    """Perform a row operation on supplied matrix and
+    return it as a latex string"""
+    string_multiplier = ""
+    if multiplier > 1 or multiplier < 0:
+        string_multiplier = "%d" % multiplier
+    latex_string = ("\\setstretch{1.5}\n"
+                    "\\setlength{\\jot}{8pt}\n")
+    latex_string += "  \\begin{array}{lcl}"
     # add first matrix
-    s += "%s\n&\n" % fracToLatexMatrix(matrix)
-    # Add rowop line
-    s +=   ("\\xymatrix@C=15ex{\n"
-            "    \\ar[r]^-{\\small\n"
-            "      \\begin{array}{r}\n")
-    s += createOpString(stringMultiplier, row1, row2, op)
-    s += "\n      \end{array}\n} & \n}"
+    latex_string += "%s\n&\n" % frac_matrix_to_latex(matrix)
+    # Add row operation line
+    latex_string += ("\\xymatrix@C=15ex{\n"
+                     "    \\ar[r]^-{\\small\n"
+                     "      \\begin{array}{r}\n")
+    latex_string += create_op_string(string_multiplier, row1, row2, operation)
+    latex_string += "\n      \\end{array}\n} & \n}"
     # add second matrix
-    if (op == "+"):
-        addRow(matrix, row1, row2, multiplier)
-    elif (op == "-"):
-        subtractRow(matrix, row1, row2, multiplier)
-    elif (op == "swap"):
-        swapRows(matrix, row1, row2)
-    elif (op == "scale"):
-        scaleRow(matrix, row1, multiplier)
-    s += "\n&\n%s" % fracToLatexMatrix(matrix)
-    s += "\\end{array}"
-    return (matrix, s)
+    if operation == "+":
+        add_row(matrix, row1, row2, multiplier)
+    elif operation == "-":
+        subtract_row(matrix, row1, row2, multiplier)
+    elif operation == "swap":
+        swap_rows(matrix, row1, row2)
+    elif operation == "scale":
+        scale_row(matrix, row1, multiplier)
+    latex_string += "\n&\n%s" % frac_matrix_to_latex(matrix)
+    latex_string += "\\end{array}"
+    return (matrix, latex_string)
 
-def fracToLatex(frac):
+def frac_to_latex(frac):
+    """Takes a fraction and returns it as a latex-formatted string"""
     split = str(frac).split("/")
-    if (len(split) == 2):
+    if len(split) == 2:
         return "\\frac{%s}{%s}" % (split[0], split[1])
     return split[0]
