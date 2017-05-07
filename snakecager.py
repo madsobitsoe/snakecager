@@ -1,55 +1,61 @@
+import traceback
 import rowop
 # A very simple Flask Hello World app for you to get started with...
 
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for, session
 
 app = Flask(__name__)
-app.config["DEBUG"] = True
-comments = []
-m = 3
-n = 3
-matrix = [[rowop.F(1) for i in range(m)] for j in range(n)]
-def updateMatrix(form):
-    newMatrix = list(matrix)
-    for key in sorted(form.keys()):
-        if (key[0] == "a"):
+app.config["SECRET_KEY"] = "development key"
+
+def createMatrix(form):
+    # Find the matrix entries
+    keys = sorted(filter(lambda x: x[0] == "a", form.keys()))
+    m = int(keys[-1][1])
+    n = int(keys[-1][2])
+    matrix = [[rowop.F(0) for xi in range(n)] for x in range(m)]
+    for key in keys:
             val = form[key]
-            newMatrix[int(key[1])-1][int(key[2])-1] = rowop.F(val)
-    return newMatrix
+            matrix[int(key[1])-1][int(key[2])-1] = rowop.F(val)
+    return matrix
 
-def toMatrix(form):
-    updateMatrix(form)
-    s = ""
-    for row in matrix:
-        s += "[ "
-        for col in row:
-            s += "%s " % col
-        s += "]\n"
-    return s
-
+@app.route("/reset", methods=["GET"])
+def reset():
+    session["comments"] = ""
+    #session["matrix"] =  ""
+    return render_template("index.html", comments=session["comments"].split(";"), matrix=[[rowop.F(1) for i in range(3)] for j in range(3)])
 
 @app.route("/", methods=["GET", "POST"])
 def index():
+    if "comments" not in session:
+        session["comments"] = ""
+
     if request.method == "GET":
-        return render_template("index.html", comments=comments, matrix=matrix)
+        return render_template("index.html", comments=session["comments"].split(";"), matrix=[[rowop.F(1) for i in range(3)] for j in range(3)])
+
+    # if request is not GET, we know it's post
     try:
-        newMatrix = updateMatrix(request.form)
+        comments = session["comments"].split(";")
         row1 = int(request.form["row1"])
         row2 = int(request.form["row2"])
         mul = request.form["multiplier"]
         op = request.form["op"]
-        comments.append("Here is your latex:")
-        comments.append(rowop.printRowOp(newMatrix, row1, row2, rowop.F(mul), op))
+
+        tmpmatrix = createMatrix(request.form)
+        newMat = rowop.printRowOp(tmpmatrix, row1, row2, rowop.F(mul), op)
+        comments.insert(0, "Here is your latex:")
+        comments.insert(1, str(newMat[1]))
+        session["comments"] += ";".join(comments)
+        return render_template("index.html", comments=comments, matrix=newMat[0])
     except:
-        pass
+        comments.append("Exception thrown")
+        comments.append(traceback.format_exc())
 
     try:
-        global m
         m = int(request.form["M"])
-        global n
         n = int(request.form["N"])
-        global matrix
         matrix = rowop.stringToFracMatrix([["1" for i in range(m)] for j in range(n)])
+        return render_template("index.html", comments=comments, matrix=matrix)
+
     except:
         pass
 
