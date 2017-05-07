@@ -6,12 +6,28 @@ from fractions import Fraction as F
 #\usepackage{setspace}
 # Only works with integers
 
+
+def intMatrixToFracMatrix(intmatrix):
+    def intToFrac(n):
+        if (n == 0):
+            return F(0,1)
+        return F(n, n)
+    fracmatrix = [[intToFrac(ix) for ix in x] for x in matrix]
+    
+    # for i in range(len(fracmatrix)-1):
+    #     for j in range(len(fracmatrix[0])-1):
+    #         fracmatrix[i][j] = F(intmatrix[i][j], intmatrix[i],[j])
+    return fracmatrix
+
+    
+ 
+
 matrix = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
 # define a matrix using fractions
-fracmatrix = [[F(3,2),F(0,1),F(0,1),F(0,1)],[F(0,1),F(1,1),F(0,1),F(0,1)],[F(0,1),F(0,1),F(1,1),F(0,1)],[F(0,1),F(0,1),F(0,1),F(1,1)]]
-
+#fracmatrix = [[F(3,2),F(0,1),F(0,1),F(0,1)],[F(0,1),F(1,1),F(0,1),F(0,1)],[F(0,1),F(0,1),F(1,1),F(0,1)],[F(0,1),F(0,1),F(0,1),F(1,1)]]
+fracmatrix = intMatrixToFracMatrix(matrix)
 def scaleRow(matrix, row, multiplier):
-    matrix[row] = map(lambda  x: x * multiplier, matrix[row])
+    matrix[row-1] = map(lambda  x: x * multiplier, matrix[row-1])
     return matrix
 
 def addRow(matrix, row1, row2, multiplier):
@@ -114,4 +130,5 @@ if __name__ == "__main__":
     printRowOp(fracmatrix, 1, 3, 0, "swap")
     printRowOp(fracmatrix, 1, 3, -7, "-")
     printRowOp(fracmatrix, 1, 3, -2, "+")
-    printRowOp(fracmatrix, 1, 1, 10, "scale")
+    printRowOp(fracmatrix, 1, 1, F(1,10), "scale")
+    printRowOp(fracmatrix, 2, 2, F(1,10), "scale")
