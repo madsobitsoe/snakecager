@@ -1,107 +1,155 @@
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
-        <title>Matrix row operations</title>
-    </head>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous">
+    <title>Matrix row operations</title>
+  </head>
 
-    <body>
-        <nav class="navbar navbar-inverse">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="#">Matrix row operations to Latex</a>
-    </div>
-  </div>
-</nav>
-
-
-<div class="container">
-    <a href="/reset">Reset matrix</a>
-<div class="row">To use matrices in LaTeX, include these lines in preamble:</div>
-<div class="row">\usepackage[all]{xy}</div>
-<div class="row">\usepackage{setspace}</div>
-
-		<div class="row">
- <form action="." method="POST">
-     M = <select name="M">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3" selected="selected">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-    </select>
-    N = <select name="N">
-    <option value="1">1</option>
-    <option value="2">2</option>
-    <option value="3" selected="selected">3</option>
-    <option value="4">4</option>
-    <option value="5">5</option>
-
-    </select>
-<input type=submit value="Update size">
-
-</form>
+  <body>
+    <nav class="navbar navbar-inverse">
+      <div class="container">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+	  </button>
+	  <a class="navbar-brand" href="#">Matrix row operations to Latex</a>
+	</div>
+	<div class="pull-right"><a class="navbar-brand" href="https://github.com/madsobitsoe/snakecager">github</a></div>
+      </div>
+    </nav>
 
 
-<form action="." method="POST">
-<table>
+    <div class="container">
+      <div class="col-md-6 col-lg-6">
+	<div>
+	  <form action="." method="POST">
+	    <div>
+	      <table>
+		{% for row in matrix %}
+		<tr>
+		  {% set rowloop = loop %}
+		  {% for cell in row %}
+		  <td><input class="" type=text size=3 name="a{{rowloop.index}}{{loop.index}}" value="{{cell}}"></td>
+		  {% endfor %}
+		  <br>
+		</tr>
+		{% endfor %}
+	      </table>
+	      <table>
+		<tr>
+		  <td>
+		      Row 1:
+		      <select name="row1">
+			{% for row in matrix %}
+			<option value="{{loop.index}}">{{loop.index}}</option>
+			{% endfor %}
+		      </select>
+		  </td>
+		</tr>
+		<tr>
+		  <td>
+		      Row 2: 
+		      <select name="row2">
+			{% for row in matrix %}
+			<option value="{{loop.index}}">{{loop.index}}</option>
+			{% endfor %}
+		      </select>
+		  </td>
+		</tr>
+		<tr>
+		  <td>
+		      Operation =
+		      <select name="op">
+			<option value="+">Addition</option>
+			<option value="-">Subtraction</option>
+			<option value="scale">Scaling</option>
+			<option value="swap">Swap rows</option>
+		      </select>
+		  </td>
+		</tr>
+		<tr>
+		  <td>
+		      Multiplier:
+		      <input type=text name="multiplier" value="1" size=5>
+		  </td>
+		</tr>
+	      </table>
+	      <input type="submit" class="btn btn-primary" value="Calculate">
+	    </form>
+	  </div>
+	  <div>
+	    <div>
+	      <form action="/resize" method="POST">
+		<table>
+		  <tr>
+		    <td>
+			M = <select name="M">
+			  <option value="1">1</option>
+			  <option value="2">2</option>
+			  <option value="3" selected="selected">3</option>
+			  <option value="4">4</option>
+			  <option value="5">5</option>
+			</select>
+		    </td>
+		  </tr>
+		  <tr>
+		    <td>
+			N = <select name="N">
+			  <option value="1">1</option>
+			  <option value="2">2</option>
+			  <option value="3" selected="selected">3</option>
+			  <option value="4">4</option>
+			  <option value="5">5</option>
+			</select>
+		    </td>
+		  </tr>
+		  <tr>
+		    <td>
+		      <input type="submit" class="btn btn-warning" value="Update size">
+		    </td>
+		  </tr>
+		</table>
+	      </form>
+	      <table>
+		<tr>
+		  <td>
+		    <form action="/reset">
+		      <input type="submit" class="btn btn-danger" value="Reset matrix"/>
+		    </form>
+		  </td>
+		</tr>
+	      </table>	
+	    </div>
+	  </div>
+	</div>
+      </div>
+      
+      <div class="col-md-6 col-lg-6">
+	<h3>How to</h3>
+	<p class="lead">Fill out the matrix and select a rowoperation to calculate.
+	  <br>Integers, floating point numbers separated by period like <code>2.25</code> and fractions are supported.
+	  <br>Fractions can be entered like <code>3/4</code>.
+	  <br>Behind the scenes everything is converted to fractions. Due to floating point imprecision, use fractions or integers if possible.
+	</p>
+	
+	<p class="lead">To use matrices in LaTeX, include these lines in preamble:</p>
+	<blockquote>
+	  <code>\usepackage[all]{xy}</code> <br>
+	  <code>\usepackage{setspace}</code>
+	</blockquote>
+	
+      </div>
+      {% for comment in comments %}
 
-    {% for row in matrix %}
-  <tr>
-  {% set rowloop = loop %}
-  {% for cell in row %}
-    <th><input class="form-control" type=text size=3 name="a{{rowloop.index}}{{loop.index}}" value="{{cell}}"></th>
-  {% endfor %}
-  <br>
-  </tr>
-
-{% endfor %}
-
-
-</table>
-    Operation =
-    <select name="op">
-        <option value="+">Addition</option>
-        <option value="-">Subtraction</option>
-        <option value="scale">Scaling</option>
-        <option value="swap">Swap rows</option>
-    </select>
-    Multiplier:
-    <input type=text name="multiplier" value="1" size=5>
-    Row 1:
-    <select name="row1">
-            {% for row in matrix %}
-            <option value="{{loop.index}}">{{loop.index}}</option>
-  {% endfor %}
-  </select>
-Row 2:
-    <select name="row2">
-            {% for row in matrix %}
-            <option value="{{loop.index}}">{{loop.index}}</option>
-    {% endfor %}
-    </select>
-
-
-
-<input type=submit value=Calculate>
-
-</form>
-
-</div>
-
-            {% for comment in comments %}
-<div class="row">
-        {{ comment }}
-    </div>
-{% endfor %}
-</div><!-- /.container -->
-    </body>
+      <div class="col-lg-10 col-md-10">
+	<pre>{{ comment }}</pre>
+      </div>
+      {% endfor %}
+    </div><!-- /.container -->
+  </body>
 </html>
