@@ -4,39 +4,33 @@ from fractions import Fraction as F
 # Requires this in preamble of latex doc
 #\usepackage[all]{xy}
 #\usepackage{setspace}
-# Only works with integers
 
-
-def intMatrixToFracMatrix(intmatrix):
-    def intToFrac(n):
-        if (n == 0):
-            return F(0,1)
-        return F(n, n)
-    fracmatrix = [[intToFrac(ix) for ix in x] for x in matrix]
-    
-    # for i in range(len(fracmatrix)-1):
-    #     for j in range(len(fracmatrix[0])-1):
-    #         fracmatrix[i][j] = F(intmatrix[i][j], intmatrix[i],[j])
+def stringToFracMatrix(stringMatrix):
+    def stringToFrac(n):
+        s = n.split("/")
+        if (len(s) == 2):
+            return F(int(s[0]), int(s[1]))
+        return F(n)
+    fracmatrix = [[stringToFrac(ix) for ix in x] for x in stringMatrix]
     return fracmatrix
 
-    
- 
+def intOrDoubleMatrixToFracMatrix(intmatrix):
+    def intToFrac(n):
+        return F(n)
+    fracmatrix = [[intToFrac(ix) for ix in x] for x in intmatrix]
+    return fracmatrix
 
-matrix = [[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]
-# define a matrix using fractions
-#fracmatrix = [[F(3,2),F(0,1),F(0,1),F(0,1)],[F(0,1),F(1,1),F(0,1),F(0,1)],[F(0,1),F(0,1),F(1,1),F(0,1)],[F(0,1),F(0,1),F(0,1),F(1,1)]]
-fracmatrix = intMatrixToFracMatrix(matrix)
 def scaleRow(matrix, row, multiplier):
     matrix[row-1] = map(lambda  x: x * multiplier, matrix[row-1])
     return matrix
 
 def addRow(matrix, row1, row2, multiplier):
-    for i in range(len(matrix[row1])-1):
+    for i in range(len(matrix[row1])):
         matrix[row2-1][i] = matrix[row2-1][i] + multiplier * matrix[row1-1][i]
     return matrix
 
 def subtractRow(matrix, row1, row2, multiplier):
-    for i in range(len(matrix[row1])-1):
+    for i in range(len(matrix[row1])):
         matrix[row2-1][i] = matrix[row2-1][i] - multiplier * matrix[row1-1][i]
     return matrix
 
@@ -90,6 +84,7 @@ def createOpString(stringMultiplier, row1, row2, op):
     return s
 
 
+    
 def printRowOp(matrix, row1, row2, multiplier, op):
     stringMultiplier = ""
     if (multiplier > 1 or multiplier < 0):
@@ -97,7 +92,7 @@ def printRowOp(matrix, row1, row2, multiplier, op):
     s = ("\\setstretch{1.5}\n"
          "\\setlength{\\jot}{8pt}\n")
     s += "  \\begin{array}{lcl}"
-    # add first matrix"
+    # add first matrix
     s += "%s\n&\n" % fracToLatexMatrix(matrix)
     # Add rowop line
     s +=   ("\\xymatrix@C=15ex{\n"
@@ -127,8 +122,27 @@ def fracToLatex(frac):
 
 # Do some matrix operations
 if __name__ == "__main__":
-    printRowOp(fracmatrix, 1, 3, 0, "swap")
-    printRowOp(fracmatrix, 1, 3, -7, "-")
-    printRowOp(fracmatrix, 1, 3, -2, "+")
-    printRowOp(fracmatrix, 1, 1, F(1,10), "scale")
-    printRowOp(fracmatrix, 2, 2, F(1,10), "scale")
+    matrix = [[1,0,0,1],
+              [0,1,0,0],
+              [0,0,1,0],
+              [0,0,0,1]]
+    doublematrix = [[1.0,0.0,0.0,0.0],
+                    [0.0,1.0,0.0,0.0],
+                    [0.0,0.0,1.0,0.0],
+                    [0.0,0.0,0.0,1.0]]
+    fracmatrix = intOrDoubleMatrixToFracMatrix(matrix)
+    frac2matrix = intOrDoubleMatrixToFracMatrix(doublematrix)
+
+    # define a matrix using fractions
+    #fracmatrix = [[F(3,2),F(0,1),F(0,1),F(0,1)],
+    #[F(0,1),F(1,1),F(0,1),F(0,1)],
+    #[F(0,1),F(0,1),F(1,1),F(0,1)],
+    #[F(0,1),F(0,1),F(0,1),F(1,1)]]
+
+#    printRowOp(fracmatrix, 1, 3, 0, "swap")
+    printRowOp(fracmatrix, 1, 3, 6, "+")
+#    printRowOp(fracmatrix, 1, 3, -2, "+")
+#    printRowOp(fracmatrix, 1, 1, F(1,10), "scale")
+#    printRowOp(fracmatrix, 2, 2, F(1,10), "scale")
+#    printRowOp(frac2matrix, 2, 2, F(1,10), "scale")
+
