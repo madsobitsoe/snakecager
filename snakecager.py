@@ -62,7 +62,7 @@ def index():
         comments = session["comments"].split(";")
         row1 = int(request.form["row1"])
         row2 = int(request.form["row2"])
-        multiplier = request.form["multiplier"]
+        multiplier = rowop.F(request.form["multiplier"])
         operation = request.form["op"]
 
         tmpmatrix = create_matrix(request.form)

@@ -68,6 +68,12 @@ def frac_matrix_to_latex(matrix):
 def create_op_string(string_multiplier, row1, row2, operation):
     if operation == "swap":
         return "\\mathbf{r}_%d \\leftrightarrow \\mathbf{r}_%d" % (row1, row2)
+    elif operation == "scale":
+        if string_multiplier == '1':
+            string_multiplier = ""
+        if string_multiplier == "-1":
+            string_multiplier = "-"
+        return "%s\\mathbf{r}_%d \\to \\mathbf{r}_%d" % (string_multiplier, row1, row1)
     return "%s\\mathbf{r}_%d %s \\mathbf{r}_%d \\to \\mathbf{r}_%d" % (string_multiplier,
                                                                        row1,
                                                                        operation,
@@ -78,11 +84,11 @@ def print_row_op(matrix, row1, row2, multiplier, operation):
     """Perform a row operation on supplied matrix and
     return it as a latex string"""
     string_multiplier = ""
-    if multiplier > 1 or multiplier < 0:
-        string_multiplier = "%d" % multiplier
+    if multiplier != 1:
+        string_multiplier = frac_to_latex(multiplier)
     latex_string = ("\\setstretch{1.5}\n"
                     "\\setlength{\\jot}{8pt}\n")
-    latex_string += "  \\begin{array}{lcl}"
+    latex_string += "  \\begin{array}{lcl}\n"
     # add first matrix
     latex_string += "%s\n&\n" % frac_matrix_to_latex(matrix)
     # Add row operation line
