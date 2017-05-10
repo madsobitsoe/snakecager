@@ -124,10 +124,20 @@ class op_string_tests(unittest.TestCase):
         row1 = 1
         row2 = 2
         operation = "+"
-        expected = "-1\\mathbf{r}_1 + \\mathbf{r}_2 \\to \\mathbf{r}_2"
+        expected = "-\\mathbf{r}_1 + \\mathbf{r}_2 \\to \\mathbf{r}_2"
         actual = rowop.create_op_string(string_multiplier, row1, row2, operation)
         self.failUnless(actual == expected)
 
+    def test_three_2(self):
+        string_multiplier = "1"
+        row1 = 1
+        row2 = 2
+        operation = "+"
+        expected = "\\mathbf{r}_1 + \\mathbf{r}_2 \\to \\mathbf{r}_2"
+        actual = rowop.create_op_string(string_multiplier, row1, row2, operation)
+        self.failUnless(actual == expected)
+
+        
     def test_four(self):
         string_multiplier = rowop.frac_to_latex(rowop.F(-1,17))
         row1 = 1
@@ -148,6 +158,7 @@ class op_string_tests(unittest.TestCase):
         actual = rowop.create_op_string(string_multiplier, row1, row2, operation)
         self.failUnless(actual == expected)
 
+        
     def test_six(self):
         string_multiplier = rowop.frac_to_latex(rowop.F(-1))
         row1 = 1
@@ -179,6 +190,23 @@ class op_string_tests(unittest.TestCase):
         actual = rowop.create_op_string(string_multiplier, row1, row2, operation)
         self.failUnless(actual == expected)
 
+    def test_nine(self):
+        string_multiplier = "-1"
+        row1 = 1
+        row2 = 2
+        operation = "-"
+        expected = "-\\mathbf{r}_1 - \\mathbf{r}_2 \\to \\mathbf{r}_2"
+        actual = rowop.create_op_string(string_multiplier, row1, row2, operation)
+        self.failUnless(actual == expected)
+
+    def test_nine_2(self):
+        string_multiplier = "1"
+        row1 = 1
+        row2 = 2
+        operation = "-"
+        expected = "\\mathbf{r}_1 - \\mathbf{r}_2 \\to \\mathbf{r}_2"
+        actual = rowop.create_op_string(string_multiplier, row1, row2, operation)
+        self.failUnless(actual == expected)
 
 
         

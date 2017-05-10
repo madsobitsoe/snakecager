@@ -34,7 +34,7 @@
 		<tr>
 		  {% set rowloop = loop %}
 		  {% for cell in row %}
-		  <td><input class="" type=text size=3 name="a{{rowloop.index}}{{loop.index}}" value="{{cell}}"></td>
+		  <td><input class="" style="text-align: center;" type="text" size=3 name="a{{rowloop.index}}{{loop.index}}" value="{{cell}}"></td>
 		  {% endfor %}
 		  <br>
 		</tr>
@@ -63,11 +63,11 @@
 		</tr>
 		<tr>
 		  <td>
-		      Operation =
+		      Operation:
 		      <select name="op">
 			<option value="+">Addition</option>
 			<option value="-">Subtraction</option>
-			<option value="scale">Scaling</option>
+			<option value="scale" selected="selected">Scaling</option>
 			<option value="swap">Swap rows</option>
 		      </select>
 		  </td>
@@ -88,7 +88,7 @@
 		<table>
 		  <tr>
 		    <td>
-			M = <select name="M">
+			M: <select name="M">
 			  <option value="1">1</option>
 			  <option value="2">2</option>
 			  <option value="3" selected="selected">3</option>
@@ -103,7 +103,7 @@
 		  </tr>
 		  <tr>
 		    <td>
-			N = <select name="N">
+			N: <select name="N">
 			  <option value="1">1</option>
 			  <option value="2">2</option>
 			  <option value="3" selected="selected">3</option>
